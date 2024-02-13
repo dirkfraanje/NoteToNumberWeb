@@ -11,6 +11,11 @@ namespace NoteToNumberWeb
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            translate.Click += Translate_Click;
+        }
+
+        private void Translate_Click(object sender, EventArgs e)
+        {
 
         }
     }
