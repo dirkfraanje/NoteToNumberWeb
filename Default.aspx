@@ -11,8 +11,11 @@
             <section class="col-md-12" aria-labelledby="gettingStartedTitle">
                 <h2 id="gettingStartedTitle">Bestand uploaden (.musicxml)</h2>
                 <p>
-                    <asp:FileUpload runat="server" accept=".musicxml" CssClass="form-control" class="w-50" />
+                    <asp:FileUpload ID="upload" runat="server" accept=".musicxml" CssClass="form-control" class="w-50" />
                 </p>
+                
+                    <asp:Label runat="server" ID="emptyFileWarning" Visible="false"></asp:Label>
+                
                 <p>
                     <asp:Button ID="translate" runat="server" Text="Vertalen" CssClass="btn btn-success" />
                 </p>
