@@ -187,7 +187,9 @@
     <Content Include="Assets\.mscbackup\.psalm4.mscz~" />
     <Content Include="Assets\.mxl" />
     <Content Include="Assets\Als_gInNoodGezeten_firsttry.pdf" />
-    <Content Include="Assets\noodgezeten.musicxml" />
+    <Content Include="Assets\noodgezeten.musicxml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Psalm 4 - Schippers.pdf" />
     <Content Include="Assets\Psalm 4 Schippers.pdf" />
     <Content Include="Assets\Psalm24-Orgel.musicxml" />

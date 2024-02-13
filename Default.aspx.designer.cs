@@ -24,13 +24,13 @@ namespace NoteToNumberWeb
         protected global::System.Web.UI.WebControls.FileUpload upload;
 
         /// <summary>
-        /// emptyFileWarning control.
+        /// warningLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label emptyFileWarning;
+        protected global::System.Web.UI.WebControls.Label warningLabel;
 
         /// <summary>
         /// translate control.

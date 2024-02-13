@@ -12,6 +12,7 @@ namespace NoteToNumberWeb
     {
         public async Task<bool> Generate(string html, string filepath)
         {
+            
             var browser = await Puppeteer.LaunchAsync(new LaunchOptions
             {
                 Headless = true
