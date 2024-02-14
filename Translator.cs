@@ -52,7 +52,7 @@ namespace NoteToNumberWeb
             return await toPDF.Generate(html, filepath);
         }
 
-        private string NumberToHTML(string title)
+        public string NumberToHTML(string title)
         {
             var numbers = GetNumbers();
             var currentMeasure = numbers[0][0].Measure;

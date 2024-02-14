@@ -12,20 +12,13 @@ namespace NoteToNumberWeb
 {
     public partial class _Default : Page
     {
-        PageAsyncTask _AsyncTask;
-        Task<bool> _task;
         protected void Page_Load(object sender, EventArgs e)
         {
-            
             translate.Click += Translate_Click;
         }
 
 
         private void Translate_Click(object sender, EventArgs e)
-        {
-            Translate();
-        }
-        async Task Translate()
         {
             //Check the upload
             if (!upload.HasFile)
@@ -77,10 +70,11 @@ namespace NoteToNumberWeb
             if (translator.ErrorLog.Length > 0)
                 SetError("Tijdens het vertalen hebben zich de volgende problemen voor gedaan:\n" + translator.ErrorLog.ToString(), "alert-warning");
 
-            //Download pdf
-            var fileName = upload.FileName.Split('.')[0];
-            await translator.GetPDF($"{fileName}.pdf");
+            //Create HTML table 
+            //TODO: NumberToHTML return table instead of html page
+            string html = translator.NumberToHTML(translator.Scorepartwise.Work?.WorktTitle?.Text ?? "Titel onbekend");
         }
+        
         private void SetError(string warning, string type)
         {
             warningLabel.Text = warning;
