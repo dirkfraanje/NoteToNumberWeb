@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
 
 namespace NoteToNumberWeb
 {
@@ -48,11 +50,11 @@ namespace NoteToNumberWeb
         public async Task<bool> GetPDF(string filepath)
         {
             var toPDF = new HTMLToPDF();
-            string html = NumberToHTML(Scorepartwise.Work?.WorktTitle?.Text ?? "Titel onbekend");
+            string html = NumberToHTMLOld(Scorepartwise.Work?.WorktTitle?.Text ?? "Titel onbekend");
             return await toPDF.Generate(html, filepath);
         }
 
-        public string NumberToHTML(string title)
+        public string NumberToHTMLOld(string title)
         {
             var numbers = GetNumbers();
             var currentMeasure = numbers[0][0].Measure;
@@ -101,7 +103,7 @@ namespace NoteToNumberWeb
                     cellsUsedInRow += colspan;
                     var colspanAttribute = colspan > 1 ? $" colspan=\"{colspan}\"" : "";
                     html.Append($"<td{colspanAttribute}>");
-                    CreateMeasureTable(html, numbers, measureStart, colspan);
+                    CreateMeasureTableOld(html, numbers, measureStart, colspan);
                     html.Append("</td>");
                     //Add the divider
                     //TODO: Check if a divider is needed anyway, even if it's at the end of the row
@@ -124,13 +126,13 @@ namespace NoteToNumberWeb
                     var cellsLeft = NUMBER_OF_CELLS - cellsUsedInRow;
                     var colspanAttribute = cellsLeft > 1 ? $" colspan=\"{cellsLeft}\"" : "";
                     html.Append($"<td{colspanAttribute}>");
-                    CreateMeasureTable(html, numbers, measureStart, cellsLeft);
+                    CreateMeasureTableOld(html, numbers, measureStart, cellsLeft);
                     html.Append("</td>");
                     //Start a new row
                     html.Append("</tr><tr>");
                     colspanAttribute = colspan - cellsLeft > 1 ? $" colspan=\"{colspan - cellsLeft}\"" : "";
                     html.Append($"<td{colspanAttribute}>");
-                    CreateMeasureTable(html, numbers, measureStart + cellsLeft, colspan - cellsLeft);
+                    CreateMeasureTableOld(html, numbers, measureStart + cellsLeft, colspan - cellsLeft);
                     html.Append("</td>");
                     cellsUsedInRow = colspan - cellsLeft;
                     //if (cellsUsedInRow < NUMBER_OF_CELLS)
@@ -148,18 +150,76 @@ namespace NoteToNumberWeb
             {
                 html.Append("<td></td>");
             }
-
-            html.Append("</tr></table>");
-            if (ErrorLog.Length > 0)
-            {
-                html.Append("<div>");
-                html.Append($"{ErrorLog.ToString()}");
-                html.Append("</div>");
-            }
+            html.Append("</tr></table></body></html>");
             return html.ToString();
         }
 
-        void CreateMeasureTable(StringBuilder html, List<List<NumberTranslated>> numbers, int measureStart, int colspan)
+        Table CreateMeasureTable(List<List<NumberTranslated>> numbers, int measureStart, int colspan)
+        {
+            var result = new Table();
+            result.Style.Add("width", "100%");
+            result.Style.Add("border-right", "1px solid black");
+            TableCell cell;
+            //var html = new StringBuilder();
+            //html.Append("<table style=\"width:100%; border-right: 1px solid black;\">");
+            //Build 4 rows: The first row specifies the length, the second row specifies the right hand, the third is the solid line the fourth is the right hand
+            List<string> lengthRowValues = new List<string>();
+            List<string> rightHandValues = new List<string>();
+            List<string> leftHandValues = new List<string>();
+            for (int i = measureStart; i < measureStart + colspan; i++)
+            {
+                var translatedAbove = numbers[0][i];
+                lengthRowValues.Add(translatedAbove.Duration);
+                rightHandValues.Add(GetValue(translatedAbove));
+                var translatedBelow = numbers[1][i];
+                leftHandValues.Add(GetValue(translatedBelow));
+            }
+            //Add length row
+            //html.Append($"<tr>");
+            var currentRow = new TableRow();
+            result.Rows.Add(currentRow);
+            foreach (var length in lengthRowValues)
+            {
+                //html.Append($"<td class=\"duration\">{length}</td>");
+                cell = new TableCell() { CssClass = "duration" };
+                cell.Controls.Add(new Label() { Text = length });
+                currentRow.Cells.Add(cell);
+            }
+            //html.Append($"</tr><tr>");
+            currentRow = new TableRow();
+            result.Rows.Add(currentRow);
+            //Add right hand row
+            foreach (var rightHand in rightHandValues)
+            {
+                //html.Append($"<td>{rightHand}</td>");
+                cell = new TableCell();
+                cell.Controls.Add(new Label() { Text = rightHand });
+                currentRow.Cells.Add(cell);
+            }
+            //Add solid line
+            var colspanAttribute = colspan > 1 ? $" colspan=\"{colspan}\"" : "";
+            //html.Append($"</tr><tr><td{colspanAttribute} class=\"td_border_top\"></td></tr><tr>");
+            currentRow = new TableRow();
+            result.Rows.Add(currentRow);
+            cell = new TableCell() { CssClass = "td_border_top" };
+            if (colspan > 1)
+                cell.ColumnSpan = colspan;
+            currentRow.Cells.Add(cell);
+            //Add left hand row
+            currentRow = new TableRow();
+            result.Rows.Add(currentRow);
+            foreach (var leftHand in leftHandValues)
+            {
+                //html.Append($"<td>{leftHand}</td>");
+                cell = new TableCell();
+                cell.Controls.Add(new Label() { Text = leftHand});
+                currentRow.Cells.Add(cell);
+            }
+            //html.Append("</tr></table>");
+            //return html.ToString();
+            return result;
+        }
+        void CreateMeasureTableOld(StringBuilder html, List<List<NumberTranslated>> numbers, int measureStart, int colspan)
         {
             html.Append("<table style=\"width:100%; border-right: 1px solid black;\">");
             //Build 4 rows: The first row specifies the length, the second row specifies the right hand, the third is the solid line the fourth is the right hand
@@ -318,6 +378,120 @@ namespace NoteToNumberWeb
             if (duration == MeasureDuration / 4 + MeasureDuration / 16)
                 return "■;";
             return "?";
+        }
+
+        public void NumberToHTML(Table result)
+        {
+            var numbers = GetNumbers();
+            var currentMeasure = numbers[0][0].Measure;
+            var totalNumbers = numbers[0].Count();
+            //var html = new StringBuilder();
+
+            //html.Append("<tr>");
+            var currentRow = new TableRow();
+            result.Rows.Add(currentRow);
+
+            for (int i = 0; i < NUMBER_OF_CELLS; i++)
+            {
+                //html.Append($"<td></td>");
+                currentRow.Cells.Add(new TableCell());
+            }
+
+            //html.Append("</tr><tr>");
+            currentRow = new TableRow();
+            result.Rows.Add(currentRow);
+
+            int cellsUsedInRow = 0;
+            //Start looping over all numbers
+            for (int i = 0; i < totalNumbers;)
+            {
+                var measureStart = i;
+
+                var colspan = GetColspanForMeasure(currentMeasure, numbers, ref i);
+                if (colspan == -1)
+                    break;
+                TableCell currentCell;
+                //Check if colspan fits or if it needs to go partly to the next row
+                if (cellsUsedInRow + colspan <= NUMBER_OF_CELLS)
+                {
+                    cellsUsedInRow += colspan;
+                    //var colspanAttribute = colspan > 1 ? $" colspan=\"{colspan}\"" : "";
+                    //html.Append($"<td{colspanAttribute}>");
+                    currentCell = new TableCell();
+                    if (colspan > 1)
+                        currentCell.ColumnSpan = colspan;
+                    currentRow.Cells.Add(currentCell);
+                    currentCell.Controls.Add(CreateMeasureTable(numbers, measureStart, colspan));
+
+                    //html.Append("</td>");
+
+                    //Add the divider
+                    //TODO: Check if a divider is needed anyway, even if it's at the end of the row
+                    //if (cellsUsedInRow < NUMBER_OF_CELLS)
+                    //{
+                    //    html.Append("<td><h1>|</h1></td>");
+                    //    cellsUsedInRow++;
+                    //}
+                    //If all cells are used, start a new row
+                    if (cellsUsedInRow == NUMBER_OF_CELLS)
+                    {
+                        //html.Append("</tr><tr>");
+                        currentRow = new TableRow();
+                        result.Rows.Add(currentRow);
+                        cellsUsedInRow = 0;
+                    }
+                    //else
+                    //{
+                    currentCell = new TableCell();
+                    currentRow.Cells.Add(currentCell);
+                    //}
+                }
+                //Else fill the current row to the end and put what's left on a new row
+                else
+                {
+                    var cellsLeft = NUMBER_OF_CELLS - cellsUsedInRow;
+                    //var colspanAttribute = cellsLeft > 1 ? $" colspan=\"{cellsLeft}\"" : "";
+                    //html.Append($"<td{colspanAttribute}>");
+                    currentCell = new TableCell();
+                    if (cellsLeft > 1)
+                        currentCell.ColumnSpan = cellsLeft;
+                    currentRow.Cells.Add(currentCell);
+                    //CreateMeasureTableOld(html, numbers, measureStart, cellsLeft);
+
+                    currentCell.Controls.Add(CreateMeasureTable(numbers, measureStart, cellsLeft));
+
+                    //html.Append("</td>");
+                    //Start a new row
+                    //html.Append("</tr><tr>");
+                    currentRow = new TableRow();
+                    result.Rows.Add(currentRow);
+                    //colspanAttribute = colspan - cellsLeft > 1 ? $" colspan=\"{colspan - cellsLeft}\"" : "";
+                    //html.Append($"<td{colspanAttribute}>");
+                    currentCell = new TableCell();
+                    if (colspan - cellsLeft > 1)
+                        currentCell.ColumnSpan = colspan - cellsLeft;
+                    currentRow.Cells.Add(currentCell);
+                    //CreateMeasureTableOld(html, numbers, measureStart + cellsLeft, colspan - cellsLeft);
+                    currentCell.Controls.Add(CreateMeasureTable(numbers, measureStart + cellsLeft, colspan - cellsLeft));
+                    //html.Append("</td>");
+                    cellsUsedInRow = colspan - cellsLeft;
+                    //if (cellsUsedInRow < NUMBER_OF_CELLS)
+                    //{
+                    //    html.Append("<td><h1>|</h1></td>");
+                    //    cellsUsedInRow++;
+                    //}
+                }
+                if (i > numbers[0].Count - 1)
+                    break;
+                currentMeasure = numbers[0][i].Measure;
+
+            }
+            for (int i = cellsUsedInRow; i < NUMBER_OF_CELLS; i++)
+            {
+                //html.Append("<td></td>");
+                currentRow.Cells.Add(new TableCell());
+            }
+            //html.Append("</tr>");
         }
     }
 

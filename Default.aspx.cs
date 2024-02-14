@@ -66,15 +66,18 @@ namespace NoteToNumberWeb
                 return;
             }
 
-            //Show warnings/errors if any
-            if (translator.ErrorLog.Length > 0)
-                SetError("Tijdens het vertalen hebben zich de volgende problemen voor gedaan:\n" + translator.ErrorLog.ToString(), "alert-warning");
 
             //Create HTML table 
-            //TODO: NumberToHTML return table instead of html page
-            string html = translator.NumberToHTML(translator.Scorepartwise.Work?.WorktTitle?.Text ?? "Titel onbekend");
+            translator.NumberToHTML(result);
+            resultHead.Text = translator.Scorepartwise.Work?.WorktTitle?.Text ?? "Titel onbekend";
+
+            //Show warnings/errors if any
+            //TODO: Show error
+            //if (translator.ErrorLog.Length > 0)
+            //    SetError("Tijdens het vertalen hebben zich de volgende problemen voor gedaan:\n" + translator.ErrorLog.ToString(), "alert-warning");
+
         }
-        
+
         private void SetError(string warning, string type)
         {
             warningLabel.Text = warning;

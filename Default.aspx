@@ -19,7 +19,8 @@
                 <p>
                     <asp:Button ID="translate" runat="server" Text="Vertalen" CssClass="btn btn-success" />
                 </p>
-
+                <h1><asp:Label ID="resultHead" runat="server"></asp:Label></h1>
+                <asp:Table ID="result" runat="server" Width="100%"></asp:Table>
             </section>
             <%--<section class="col-md-4" aria-labelledby="librariesTitle">
                 <h2 id="librariesTitle">Get more libraries</h2>

@@ -2,3 +2,21 @@
 input {
     max-width: 50%;
 }
+
+table td {
+    border: 0px;
+    text-align: center;
+}
+
+.td_border_top {
+    border-top: 1px solid black;
+}
+
+.duration {
+    font-size: 8px;
+}
+
+table.no-spacing {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
