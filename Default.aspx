@@ -18,6 +18,7 @@
                 
                 <p>
                     <asp:Button ID="translate" runat="server" Text="Vertalen" CssClass="btn btn-success" />
+                    <asp:Button ID="testbutton" runat="server" Text="Test" CssClass="btn btn-warning" />
                 </p>
                 <h1><asp:Label ID="resultHead" runat="server"></asp:Label></h1>
                 <asp:Table ID="result" runat="server" Width="100%"></asp:Table>

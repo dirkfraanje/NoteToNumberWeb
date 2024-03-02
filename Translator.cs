@@ -385,113 +385,83 @@ namespace NoteToNumberWeb
             var numbers = GetNumbers();
             var currentMeasure = numbers[0][0].Measure;
             var totalNumbers = numbers[0].Count();
-            //var html = new StringBuilder();
-
-            //html.Append("<tr>");
             var currentRow = new TableRow();
             result.Rows.Add(currentRow);
 
             for (int i = 0; i < NUMBER_OF_CELLS; i++)
             {
-                //html.Append($"<td></td>");
-                currentRow.Cells.Add(new TableCell());
+                currentRow.Cells.Add(new TableCell() { CssClass = "main-cell" });
             }
 
-            //html.Append("</tr><tr>");
             currentRow = new TableRow();
             result.Rows.Add(currentRow);
-
+            var currentCell = new TableCell();
+            currentRow.Cells.Add(currentCell);
             int cellsUsedInRow = 0;
             //Start looping over all numbers
-            for (int i = 0; i < totalNumbers;)
+            for (int i = 0;     i < totalNumbers;)
             {
                 var measureStart = i;
 
                 var colspan = GetColspanForMeasure(currentMeasure, numbers, ref i);
                 if (colspan == -1)
                     break;
-                TableCell currentCell;
                 //Check if colspan fits or if it needs to go partly to the next row
                 if (cellsUsedInRow + colspan <= NUMBER_OF_CELLS)
                 {
                     cellsUsedInRow += colspan;
-                    //var colspanAttribute = colspan > 1 ? $" colspan=\"{colspan}\"" : "";
-                    //html.Append($"<td{colspanAttribute}>");
-                    currentCell = new TableCell();
+                    
                     if (colspan > 1)
                         currentCell.ColumnSpan = colspan;
-                    currentRow.Cells.Add(currentCell);
+                    if (currentCell.Controls.Count > 0)
+                        throw new Exception("Controls should not be filled yet");
                     currentCell.Controls.Add(CreateMeasureTable(numbers, measureStart, colspan));
 
-                    //html.Append("</td>");
-
-                    //Add the divider
-                    //TODO: Check if a divider is needed anyway, even if it's at the end of the row
-                    //if (cellsUsedInRow < NUMBER_OF_CELLS)
-                    //{
-                    //    html.Append("<td><h1>|</h1></td>");
-                    //    cellsUsedInRow++;
-                    //}
+                    currentRow.Cells.Add(currentCell);
                     //If all cells are used, start a new row
                     if (cellsUsedInRow == NUMBER_OF_CELLS)
                     {
-                        //html.Append("</tr><tr>");
                         currentRow = new TableRow();
                         result.Rows.Add(currentRow);
                         cellsUsedInRow = 0;
                     }
-                    //else
-                    //{
-                    currentCell = new TableCell();
-                    currentRow.Cells.Add(currentCell);
-                    //}
+                    
+                    
                 }
                 //Else fill the current row to the end and put what's left on a new row
                 else
                 {
                     var cellsLeft = NUMBER_OF_CELLS - cellsUsedInRow;
-                    //var colspanAttribute = cellsLeft > 1 ? $" colspan=\"{cellsLeft}\"" : "";
-                    //html.Append($"<td{colspanAttribute}>");
-                    currentCell = new TableCell();
                     if (cellsLeft > 1)
                         currentCell.ColumnSpan = cellsLeft;
                     currentRow.Cells.Add(currentCell);
-                    //CreateMeasureTableOld(html, numbers, measureStart, cellsLeft);
-
+                    if (currentCell.Controls.Count > 0)
+                        throw new Exception("Controls should not be filled yet");
                     currentCell.Controls.Add(CreateMeasureTable(numbers, measureStart, cellsLeft));
 
-                    //html.Append("</td>");
-                    //Start a new row
-                    //html.Append("</tr><tr>");
                     currentRow = new TableRow();
                     result.Rows.Add(currentRow);
-                    //colspanAttribute = colspan - cellsLeft > 1 ? $" colspan=\"{colspan - cellsLeft}\"" : "";
-                    //html.Append($"<td{colspanAttribute}>");
                     currentCell = new TableCell();
                     if (colspan - cellsLeft > 1)
                         currentCell.ColumnSpan = colspan - cellsLeft;
                     currentRow.Cells.Add(currentCell);
-                    //CreateMeasureTableOld(html, numbers, measureStart + cellsLeft, colspan - cellsLeft);
+                    if (currentCell.Controls.Count > 0)
+                        throw new Exception("Controls should not be filled yet");
                     currentCell.Controls.Add(CreateMeasureTable(numbers, measureStart + cellsLeft, colspan - cellsLeft));
-                    //html.Append("</td>");
                     cellsUsedInRow = colspan - cellsLeft;
-                    //if (cellsUsedInRow < NUMBER_OF_CELLS)
-                    //{
-                    //    html.Append("<td><h1>|</h1></td>");
-                    //    cellsUsedInRow++;
-                    //}
                 }
                 if (i > numbers[0].Count - 1)
                     break;
                 currentMeasure = numbers[0][i].Measure;
+                if (currentCell.Controls.Count == 0)
+                    throw new Exception();
 
+                    currentCell = new TableCell();
             }
             for (int i = cellsUsedInRow; i < NUMBER_OF_CELLS; i++)
             {
-                //html.Append("<td></td>");
                 currentRow.Cells.Add(new TableCell());
             }
-            //html.Append("</tr>");
         }
     }
 

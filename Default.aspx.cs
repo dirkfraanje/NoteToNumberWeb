@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,7 +17,6 @@ namespace NoteToNumberWeb
         {
             translate.Click += Translate_Click;
         }
-
 
         private void Translate_Click(object sender, EventArgs e)
         {

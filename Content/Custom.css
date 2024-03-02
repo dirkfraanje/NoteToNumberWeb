@@ -11,6 +11,10 @@ table td {
 .td_border_top {
     border-top: 1px solid black;
 }
+/*divide by number of cells from Translator.cs */
+.main-cell {
+    width: calc(100% / 18);
+}
 
 .duration {
     font-size: 8px;
