@@ -11,6 +11,7 @@ namespace NoteToNumberWeb
 {
     public class Translator
     {
+        Table table;
         readonly StringBuilder _result = new StringBuilder();
         readonly StringBuilder _errorlog = new StringBuilder();
         readonly List<Number> _numbers = new List<Number>();

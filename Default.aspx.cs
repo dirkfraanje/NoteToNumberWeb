@@ -1,5 +1,6 @@
 ﻿using Microsoft.Ajax.Utilities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,26 @@ namespace NoteToNumberWeb
         protected void Page_Load(object sender, EventArgs e)
         {
             translate.Click += Translate_Click;
+            testbutton.Click += Testbutton_Click;
+        }
+
+        private void Testbutton_Click(object sender, EventArgs e)
+        {
+            if (CacheTable.Instance.Table != null)
+            {
+                var text = ((Label)CacheTable.Instance.Table.Rows[2].Cells[3].Controls[0].Controls[1].Controls[0].Controls[0]).Text;
+                warningLabel.Text = text;
+                warningLabel.CssClass = $"alert alert-danger";
+                translate.CssClass = "btn btn-success mt-5";
+                warningLabelPanel.Visible = true;
+                TableRow[] tableRowArray = new TableRow[CacheTable.Instance.Table.Rows.Count];
+                CacheTable.Instance.Table.Rows.CopyTo(tableRowArray, 0);
+                foreach (var item in tableRowArray)
+                {
+                    result.Rows.Add(item);
+                }
+                return;
+            }
         }
 
         private void Translate_Click(object sender, EventArgs e)
@@ -34,9 +55,10 @@ namespace NoteToNumberWeb
             else
             {
                 translate.CssClass = "btn btn-success";
-                warningLabel.Visible = false;
+                warningLabelPanel.Visible = false;
             }
             var translator = new Translator();
+            CacheTable.Instance.Table = result;
 
             //Read the file
             try
@@ -83,7 +105,7 @@ namespace NoteToNumberWeb
             warningLabel.Text = warning;
             warningLabel.CssClass = $"alert {type}";
             translate.CssClass = "btn btn-success mt-5";
-            warningLabel.Visible = true;
+            warningLabelPanel.Visible = true;
             return;
         }
     }
