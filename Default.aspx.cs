@@ -20,7 +20,19 @@ namespace NoteToNumberWeb
         }
         protected override void OnInit(EventArgs e)
         {
+
+            if (IsPostBack)
+            {
+                var toDeleteKey = Page.Request.Form.AllKeys.FirstOrDefault(x => x.Contains("deleteList"));
+                if (toDeleteKey != null)
+                {
+                    var toDeleteValue = Page.Request.Form[toDeleteKey];
+                }
+               
+
+            }
             base.OnInit(e);
+            this.ClientScript.RegisterStartupScript(GetType(), "delete", "<script type=\"\"text/javascript\"\">function addDelete(p1) {WebForm_GetElementById('MainContent_deleteList').value = p1;}\r\n</script>");
             if(CacheTable.Instance.TableRowArray != null)
             {
                 foreach (var row in CacheTable.Instance.TableRowArray)
@@ -29,12 +41,7 @@ namespace NoteToNumberWeb
                 }
             }
         }
-        //TODO: Get edit initiator
-        private void Testbutton_Click(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private void Translate_Click(object sender, EventArgs e)
         {
             //Check the upload
@@ -86,6 +93,7 @@ namespace NoteToNumberWeb
 
             //Create HTML table 
             translator.NumberToHTML(result);
+
             CacheTable.Instance.TableRowArray = new TableRow[result.Rows.Count];
             result.Rows.CopyTo(CacheTable.Instance.TableRowArray, 0);
             resultHead.Text = translator.Scorepartwise.Work?.WorktTitle?.Text ?? "Titel onbekend";

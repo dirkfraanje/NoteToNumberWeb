@@ -11,6 +11,7 @@ namespace NoteToNumberWeb
         private static CacheTable instance = null;
         private static readonly object padlock = new object();
         public TableRow[] TableRowArray;
+
         CacheTable()
         {
         }
