@@ -17,26 +17,22 @@ namespace NoteToNumberWeb
         protected void Page_Load(object sender, EventArgs e)
         {
             translate.Click += Translate_Click;
-            testbutton.Click += Testbutton_Click;
         }
-
+        protected override void OnInit(EventArgs e)
+        {
+            base.OnInit(e);
+            if(CacheTable.Instance.TableRowArray != null)
+            {
+                foreach (var row in CacheTable.Instance.TableRowArray)
+                {
+                    result.Rows.Add(row);
+                }
+            }
+        }
+        //TODO: Get edit initiator
         private void Testbutton_Click(object sender, EventArgs e)
         {
-            if (CacheTable.Instance.Table != null)
-            {
-                var text = ((Label)CacheTable.Instance.Table.Rows[2].Cells[3].Controls[0].Controls[1].Controls[0].Controls[0]).Text;
-                warningLabel.Text = text;
-                warningLabel.CssClass = $"alert alert-danger";
-                translate.CssClass = "btn btn-success mt-5";
-                warningLabelPanel.Visible = true;
-                TableRow[] tableRowArray = new TableRow[CacheTable.Instance.Table.Rows.Count];
-                CacheTable.Instance.Table.Rows.CopyTo(tableRowArray, 0);
-                foreach (var item in tableRowArray)
-                {
-                    result.Rows.Add(item);
-                }
-                return;
-            }
+
         }
 
         private void Translate_Click(object sender, EventArgs e)
@@ -58,7 +54,6 @@ namespace NoteToNumberWeb
                 warningLabelPanel.Visible = false;
             }
             var translator = new Translator();
-            CacheTable.Instance.Table = result;
 
             //Read the file
             try
@@ -91,6 +86,8 @@ namespace NoteToNumberWeb
 
             //Create HTML table 
             translator.NumberToHTML(result);
+            CacheTable.Instance.TableRowArray = new TableRow[result.Rows.Count];
+            result.Rows.CopyTo(CacheTable.Instance.TableRowArray, 0);
             resultHead.Text = translator.Scorepartwise.Work?.WorktTitle?.Text ?? "Titel onbekend";
 
             //Show warnings/errors if any

@@ -16,11 +16,10 @@
                 <asp:Panel runat="server" ID="warningLabelPanel">
                     <asp:Label runat="server" ID="warningLabel"></asp:Label>
                 </asp:Panel>
-                <asp:Panel>
+                <asp:Panel runat="server">
 
                     <p>
                         <asp:Button ID="translate" runat="server" Text="Vertalen" CssClass="btn btn-success" />
-                        <asp:Button ID="testbutton" runat="server" Text="Test" CssClass="btn btn-warning" />
                     </p>
                 </asp:Panel>
                 <h1>

@@ -10,7 +10,7 @@ namespace NoteToNumberWeb
     {
         private static CacheTable instance = null;
         private static readonly object padlock = new object();
-        public Table Table;
+        public TableRow[] TableRowArray;
         CacheTable()
         {
         }

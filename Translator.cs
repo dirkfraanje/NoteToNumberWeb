@@ -161,9 +161,7 @@ namespace NoteToNumberWeb
             result.Style.Add("width", "100%");
             result.Style.Add("border-right", "1px solid black");
             TableCell cell;
-            //var html = new StringBuilder();
-            //html.Append("<table style=\"width:100%; border-right: 1px solid black;\">");
-            //Build 4 rows: The first row specifies the length, the second row specifies the right hand, the third is the solid line the fourth is the right hand
+            //Build 5 rows: The first row contains the icons, the second row specifies the length, the third row specifies the right hand, the fourth is the solid line the fifth is the right hand
             List<string> lengthRowValues = new List<string>();
             List<string> rightHandValues = new List<string>();
             List<string> leftHandValues = new List<string>();
@@ -175,31 +173,36 @@ namespace NoteToNumberWeb
                 var translatedBelow = numbers[1][i];
                 leftHandValues.Add(GetValue(translatedBelow));
             }
-            //Add length row
-            //html.Append($"<tr>");
+            //Add icon row
             var currentRow = new TableRow();
+            result.Rows.Add(currentRow);
+            
+            var iconCell = new TableCell();
+            currentRow.Cells.Add(iconCell);
+            if (colspan > 1)
+                iconCell.ColumnSpan = colspan;
+            var editIcon = new LinkButton() { ID =$"{Guid.NewGuid()}", Text = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-pencil text-dark\" viewBox=\"0 0 16 16\">\r\n  <path d=\"M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325\"/>\r\n</svg>" };
+            
+            iconCell.Controls.Add(editIcon);
+            //Add length row
+            currentRow = new TableRow();
             result.Rows.Add(currentRow);
             foreach (var length in lengthRowValues)
             {
-                //html.Append($"<td class=\"duration\">{length}</td>");
                 cell = new TableCell() { CssClass = "duration" };
                 cell.Controls.Add(new Label() { Text = length });
                 currentRow.Cells.Add(cell);
             }
-            //html.Append($"</tr><tr>");
             currentRow = new TableRow();
             result.Rows.Add(currentRow);
             //Add right hand row
             foreach (var rightHand in rightHandValues)
             {
-                //html.Append($"<td>{rightHand}</td>");
                 cell = new TableCell();
                 cell.Controls.Add(new Label() { Text = rightHand });
                 currentRow.Cells.Add(cell);
             }
             //Add solid line
-            var colspanAttribute = colspan > 1 ? $" colspan=\"{colspan}\"" : "";
-            //html.Append($"</tr><tr><td{colspanAttribute} class=\"td_border_top\"></td></tr><tr>");
             currentRow = new TableRow();
             result.Rows.Add(currentRow);
             cell = new TableCell() { CssClass = "td_border_top" };
@@ -211,15 +214,16 @@ namespace NoteToNumberWeb
             result.Rows.Add(currentRow);
             foreach (var leftHand in leftHandValues)
             {
-                //html.Append($"<td>{leftHand}</td>");
                 cell = new TableCell();
                 cell.Controls.Add(new Label() { Text = leftHand});
                 currentRow.Cells.Add(cell);
             }
-            //html.Append("</tr></table>");
-            //return html.ToString();
+
             return result;
         }
+
+       
+
         void CreateMeasureTableOld(StringBuilder html, List<List<NumberTranslated>> numbers, int measureStart, int colspan)
         {
             html.Append("<table style=\"width:100%; border-right: 1px solid black;\">");
