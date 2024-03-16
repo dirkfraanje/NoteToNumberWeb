@@ -20,7 +20,6 @@
 
                     <p>
                         <asp:Button ID="translate" runat="server" Text="Vertalen" CssClass="btn btn-success" />
-                        <asp:TextBox ID="deleteList" hidden runat="server" />
                     </p>
                 </asp:Panel>
                 <h1>

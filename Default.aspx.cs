@@ -20,19 +20,7 @@ namespace NoteToNumberWeb
         }
         protected override void OnInit(EventArgs e)
         {
-
-            if (IsPostBack)
-            {
-                var toDeleteKey = Page.Request.Form.AllKeys.FirstOrDefault(x => x.Contains("deleteList"));
-                if (toDeleteKey != null)
-                {
-                    var toDeleteValue = Page.Request.Form[toDeleteKey];
-                }
-               
-
-            }
             base.OnInit(e);
-            this.ClientScript.RegisterStartupScript(GetType(), "delete", "<script type=\"\"text/javascript\"\">function addDelete(p1) {WebForm_GetElementById('MainContent_deleteList').value = p1;}\r\n</script>");
             if(CacheTable.Instance.TableRowArray != null)
             {
                 foreach (var row in CacheTable.Instance.TableRowArray)
