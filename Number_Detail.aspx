@@ -1,9 +1,8 @@
-﻿<%@ Page Title="Nummer bewerken" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Number_Detail.aspx.cs" Inherits="NoteToNumberWeb.Contact" %>
+﻿<%@ Page Title="Cijfer bewerken" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Number_Detail.aspx.cs" Inherits="NoteToNumberWeb.Number_Detail" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <main aria-labelledby="title">
-        <h3>Bewerken</h3>
-        
-
+        <h3>Cijfer bewerken</h3>
+        <asp:Table runat="server" ID="TableEdit" ></asp:Table>
     </main>
 </asp:Content>

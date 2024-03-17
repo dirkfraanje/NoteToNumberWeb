@@ -157,7 +157,8 @@ namespace NoteToNumberWeb
 
         Table CreateMeasureTable(List<List<NumberTranslated>> numbers, int measureStart, int colspan)
         {
-            var result = new Table();
+            var id = Guid.NewGuid().ToString();
+            var result = new Table() { ID = id };
             result.Style.Add("width", "100%");
             result.Style.Add("border-right", "1px solid black");
             TableCell cell;
@@ -176,13 +177,11 @@ namespace NoteToNumberWeb
             //Add icon row
             var currentRow = new TableRow();
             result.Rows.Add(currentRow);
-            for (int i = 0; i < leftHandValues.Count; i++)
-            {
-                var iconCell = new TableCell();
-                currentRow.Cells.Add(iconCell);
-                iconCell.Text = $"<a href= \"Number_Detail.aspx?id={measureStart+i}\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"#0d6efd\" class=\"bi bi-pencil\" viewBox=\"0 0 16 16\">\r\n  <path d=\"M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325\"/>\r\n</svg></a>";
-            }
-            
+            var iconCell = new TableCell();
+            if(colspan > 1)
+                iconCell.ColumnSpan = colspan;
+            currentRow.Cells.Add(iconCell);
+            iconCell.Text = $"<a href= \"Number_Detail.aspx?ID={id}\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"#0d6efd\" class=\"bi bi-pencil\" viewBox=\"0 0 16 16\">\r\n  <path d=\"M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325\"/>\r\n</svg></a>";
             //Add length row
             currentRow = new TableRow();
             result.Rows.Add(currentRow);
@@ -214,14 +213,14 @@ namespace NoteToNumberWeb
             foreach (var leftHand in leftHandValues)
             {
                 cell = new TableCell();
-                cell.Controls.Add(new Label() { Text = leftHand});
+                cell.Controls.Add(new Label() { Text = leftHand });
                 currentRow.Cells.Add(cell);
             }
 
             return result;
         }
 
-       
+
 
         void CreateMeasureTableOld(StringBuilder html, List<List<NumberTranslated>> numbers, int measureStart, int colspan)
         {
@@ -414,7 +413,7 @@ namespace NoteToNumberWeb
                 if (cellsUsedInRow + colspan <= NUMBER_OF_CELLS)
                 {
                     cellsUsedInRow += colspan;
-                    
+
                     if (colspan > 1)
                         currentCell.ColumnSpan = colspan;
                     if (currentCell.Controls.Count > 0)
@@ -429,8 +428,8 @@ namespace NoteToNumberWeb
                         result.Rows.Add(currentRow);
                         cellsUsedInRow = 0;
                     }
-                    
-                    
+
+
                 }
                 //Else fill the current row to the end and put what's left on a new row
                 else
@@ -460,7 +459,7 @@ namespace NoteToNumberWeb
                 if (currentCell.Controls.Count == 0)
                     throw new Exception();
 
-                    currentCell = new TableCell();
+                currentCell = new TableCell();
             }
             for (int i = cellsUsedInRow; i < NUMBER_OF_CELLS; i++)
             {
