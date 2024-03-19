@@ -22,14 +22,35 @@ namespace NoteToNumberWeb
             if (table == null)
                 //TODO: Show message table empty
                 return;
+            //A measure table should have 5 rows
+            if (table.Rows.Count != 5)
+                //TODO: Show error message
+                return;
             TableEdit.Rows.Clear();
+            //TableEdit.Style.Add("Width", $"{(table.Rows[2].Cells.Count * 10) / 4}%");
             var rows = new TableRow[table.Rows.Count];
             table.Rows.CopyTo(rows, 0);
-            foreach (var row in rows)
+           
+            
+            for(int i=0; i < 5; i++)
             {
                 //TODO: Create inputfields
-                TableEdit.Rows.Add(row);
-                TableEdit.Style.Add("Width", $"{(rows[2].Cells.Count* 10)/2}%");
+                if(i != 1 && i != 2 && i != 4)
+                {
+                    TableEdit.Rows.Add(rows[i]);
+                    continue;
+                }
+                //The 3th and 5th row contain the numbers
+                var numberRow = rows[i];
+                var inputRow = new TableRow() { ID= numberRow.ID };
+                TableEdit.Rows.Add(inputRow);
+                foreach (TableCell cell in numberRow.Cells)
+                {
+                    var inputCell = new TableCell() { ID = cell.ID };
+                    var inputField = new TextBox() { Text = ((Label)cell.Controls[0]).Text };
+                    inputCell.Controls.Add(inputField);
+                    inputRow.Controls.Add(inputCell);
+                }
             }
         }
     }
