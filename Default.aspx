@@ -20,6 +20,7 @@
 
                     <p>
                         <asp:Button ID="translate" runat="server" Text="Vertalen" CssClass="btn btn-success" />
+                        <asp:Button ID="test" runat="server" Text="Voorbeeld" CssClass="btn btn-success" />
                     </p>
                 </asp:Panel>
                 <h1>

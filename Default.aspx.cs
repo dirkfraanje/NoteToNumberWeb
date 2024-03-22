@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
@@ -17,7 +18,53 @@ namespace NoteToNumberWeb
         protected void Page_Load(object sender, EventArgs e)
         {
             translate.Click += Translate_Click;
+            test.Click += Test_Click;
         }
+
+        private void Test_Click(object sender, EventArgs e)
+        {
+            var translator = new Translator();
+
+            //Read the file
+            try
+            {
+                string xml;
+                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Assets\noodgezeten.musicxml");
+                FileInfo fi = new FileInfo(path);
+                FileStream fs = fi.Open(FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read);
+                using (var inputReader = new StreamReader(fs))
+                {
+                    xml = inputReader.ReadToEnd();
+                    XmlSerializer serializer = new XmlSerializer(typeof(Scorepartwise));
+                    using (StringReader xmlReader = new StringReader(xml))
+                    {
+                        translator.Scorepartwise = (Scorepartwise)serializer.Deserialize(xmlReader);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SetError("Er is iet mis gegaan:\n" + ex.Message, "alert-danger");
+            }
+
+            //Translate
+            if (translator.Scorepartwise != null)
+                translator.Scorepartwise.TranslateToNumber(translator);
+            else
+            {
+                SetError("Er zijn geen noten gevonden om te vertalen.", "alert-warning");
+                return;
+            }
+
+
+            //Create HTML table 
+            translator.NumberToHTML(result);
+
+            CacheTable.Instance.TableRowArray = new TableRow[result.Rows.Count];
+            result.Rows.CopyTo(CacheTable.Instance.TableRowArray, 0);
+            resultHead.Text = translator.Scorepartwise.Work?.WorktTitle?.Text ?? "Titel onbekend";
+        }
+
         protected override void OnInit(EventArgs e)
         {
             base.OnInit(e);
