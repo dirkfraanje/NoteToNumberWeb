@@ -17,9 +17,12 @@ namespace NoteToNumberWeb
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["Authenticated"] == null)
+                Page.Response.Redirect("Login.aspx");
             translate.Click += Translate_Click;
             test.Click += Test_Click;
         }
+
 
         private void Test_Click(object sender, EventArgs e)
         {
@@ -68,7 +71,7 @@ namespace NoteToNumberWeb
         protected override void OnInit(EventArgs e)
         {
             base.OnInit(e);
-            if(CacheTable.Instance.TableRowArray != null)
+            if (CacheTable.Instance.TableRowArray != null)
             {
                 foreach (var row in CacheTable.Instance.TableRowArray)
                 {
@@ -76,7 +79,7 @@ namespace NoteToNumberWeb
                 }
             }
         }
-        
+
         private void Translate_Click(object sender, EventArgs e)
         {
             //Check the upload

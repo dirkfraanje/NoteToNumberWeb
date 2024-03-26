@@ -14,6 +14,8 @@ namespace NoteToNumberWeb
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["Authenticated"] == null)
+                Page.Response.Redirect("Login.aspx");
             if (CacheTable.Instance.TableRowArray == null)
                 //TODO: Show message table row empty
                 return;
