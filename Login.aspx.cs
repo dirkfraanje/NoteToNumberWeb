@@ -27,7 +27,7 @@ namespace NoteToNumberWeb
                 PasswordWarning.Visible = true;
                 valid = false;
             }
-            if (!UserName.Text.ToLower().Equals("jan"))
+            if (!UserName.Text.ToLower().Equals("jan") && !UserName.Text.ToLower().Equals("chris"))
             {
                 UserWarning.Visible = true;
                 valid = false;
