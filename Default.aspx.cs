@@ -15,6 +15,21 @@ namespace NoteToNumberWeb
 {
     public partial class _Default : Page
     {
+        const string TableRows = "TableRows";
+
+        protected override void OnInit(EventArgs e)
+        {
+            base.OnInit(e);
+            var existingRows = Session[TableRows];
+            if (existingRows != null)
+            {
+                foreach (var row in existingRows as TableRow[])
+                {
+                    result.Rows.Add(row);
+                }
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["Authenticated"] == null)
@@ -22,7 +37,6 @@ namespace NoteToNumberWeb
             translate.Click += Translate_Click;
             test.Click += Test_Click;
         }
-
 
         private void Test_Click(object sender, EventArgs e)
         {
@@ -61,24 +75,14 @@ namespace NoteToNumberWeb
 
 
             //Create HTML table 
+            result.Rows.Clear();
             translator.NumberToHTML(result);
-
-            CacheTable.Instance.TableRowArray = new TableRow[result.Rows.Count];
-            result.Rows.CopyTo(CacheTable.Instance.TableRowArray, 0);
+            Session[TableRows] = new TableRow[result.Rows.Count];
+            result.Rows.CopyTo((TableRow[])Session[TableRows], 0);
             resultHead.Text = translator.Scorepartwise.Work?.WorktTitle?.Text ?? "Titel onbekend";
         }
 
-        protected override void OnInit(EventArgs e)
-        {
-            base.OnInit(e);
-            if (CacheTable.Instance.TableRowArray != null)
-            {
-                foreach (var row in CacheTable.Instance.TableRowArray)
-                {
-                    result.Rows.Add(row);
-                }
-            }
-        }
+        
 
         private void Translate_Click(object sender, EventArgs e)
         {
@@ -130,10 +134,11 @@ namespace NoteToNumberWeb
 
 
             //Create HTML table 
+            result.Rows.Clear();
             translator.NumberToHTML(result);
 
-            CacheTable.Instance.TableRowArray = new TableRow[result.Rows.Count];
-            result.Rows.CopyTo(CacheTable.Instance.TableRowArray, 0);
+            Session[TableRows] = new TableRow[result.Rows.Count];
+            result.Rows.CopyTo((TableRow[])Session[TableRows], 0);
             resultHead.Text = translator.Scorepartwise.Work?.WorktTitle?.Text ?? "Titel onbekend";
 
             //Show warnings/errors if any

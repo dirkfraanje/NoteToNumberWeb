@@ -12,15 +12,16 @@ namespace NoteToNumberWeb
 {
     public partial class Number_Detail : Page
     {
+        const string TableRows = "TableRows";
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["Authenticated"] == null)
                 Page.Response.Redirect("Login.aspx");
-            if (CacheTable.Instance.TableRowArray == null)
+            if (Session[TableRows] == null)
                 //TODO: Show message table row empty
                 return;
             var id = Page.Request.QueryString["ID"];
-            var table = CacheTable.Instance.TableRowArray.Select(x => x.Cells).SelectMany(c => c.Cast<TableCell>().Where(u => u.Controls.Count == 1)).FirstOrDefault(y => y.Controls[0].ID == id).Controls[0] as Table;
+            var table = (Session[TableRows] as TableRow[]).Select(x => x.Cells).SelectMany(c => c.Cast<TableCell>().Where(u => u.Controls.Count == 1)).FirstOrDefault(y => y.Controls[0].ID == id).Controls[0] as Table;
             if (table == null)
                 //TODO: Show message table empty
                 return;
