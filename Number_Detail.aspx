@@ -4,5 +4,6 @@
     <main aria-labelledby="title">
         <h3>Cijfer bewerken</h3>
         <asp:Table runat="server" ID="TableEdit" ></asp:Table>
+        <asp:Button runat="server" ID="saveButton"/>
     </main>
 </asp:Content>
