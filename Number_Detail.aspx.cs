@@ -13,7 +13,7 @@ namespace NoteToNumberWeb
     public partial class Number_Detail : Page
     {
         const string TableRows = "TableRows";
-        const string WorkingTableParent = "WorkingTableParent";
+        const string WorkingTable = "WorkingTable";
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["Authenticated"] == null)
@@ -32,14 +32,16 @@ namespace NoteToNumberWeb
                 if (table == null)
                     //TODO: Show message table empty
                     return;
-                var parent = table.Parent;
-                Session[WorkingTableParent] = parent;
+                //Store the table
+                Session[WorkingTable] = table;
                 //A measure table should have 5 rows
                 if (table.Rows.Count != 5)
                     //TODO: Show error message
                     return;
                 TableEdit.Rows.Clear();
                 //TableEdit.Style.Add("Width", $"{(table.Rows[2].Cells.Count * 10) / 4}%");
+
+                //Create the rows to work with
                 var rows = new TableRow[table.Rows.Count];
                 table.Rows.CopyTo(rows, 0);
 
@@ -69,10 +71,12 @@ namespace NoteToNumberWeb
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            var workingCell = Session[WorkingTableParent] as TableCell;
-            workingCell.Controls.Clear();
+            //TODO: Restore the data from the inputfields back to the original cells
+            var workingTable = Session[WorkingTable] as Table;
+            var parent = workingTable.Parent;
+            parent.Controls.Clear();
 
-            workingCell.Controls.Add(new Label() { Text = "Test" });
+            parent.Controls.Add(workingTable);
             Page.Response.Redirect("Default.aspx");
         }
     }
