@@ -186,7 +186,6 @@
     <Content Include="Content\bootstrap-grid.rtl.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
-    <Content Include="Assets\.mscbackup\.psalm4.mscz~" />
     <Content Include="Assets\.mxl" />
     <Content Include="Assets\Als_gInNoodGezeten_firsttry.pdf" />
     <Content Include="Assets\noodgezeten.musicxml">
